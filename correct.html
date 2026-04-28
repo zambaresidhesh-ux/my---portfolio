@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>My Digital Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root{--accent:#c9a84c;--accent2:#e8c97a;--dark:#0d0d0d;--dark2:#161616;--dark3:#1e1e1e;--light:#f5f0e8;--muted:#888;--card:#1a1a1a;--border:rgba(201,168,76,0.22);}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--dark);color:var(--light);font-family:'DM Sans',sans-serif;overflow-x:hidden;}
+#particles{position:fixed;inset:0;z-index:0;pointer-events:none;}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(13,13,13,0.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;justify-content:center;flex-wrap:wrap;}
+nav a{color:var(--muted);text-decoration:none;font-size:12px;letter-spacing:1.8px;text-transform:uppercase;font-weight:500;padding:18px 20px;transition:color .3s,border-bottom .3s;border-bottom:2px solid transparent;cursor:pointer;}
+nav a:hover,nav a.active{color:var(--accent);border-bottom:2px solid var(--accent);}
+section{min-height:100vh;padding:100px 40px 60px;display:none;position:relative;z-index:1;}
+section.active{display:block;animation:fadeUp .55s ease both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px);}to{opacity:1;transform:translateY(0);}}
+#home{display:none;align-items:center;justify-content:center;padding:0;}
+#home.active{display:flex;}
+.home-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 55% 45%,#1f1800 0%,var(--dark) 68%);z-index:0;}
+.home-inner{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;padding:40px 20px;gap:0;}
+.ring-wrap{position:relative;display:inline-block;margin-bottom:24px;cursor:pointer;}
+.ring-wrap::before{content:'';position:absolute;inset:-12px;border-radius:50%;border:1.5px solid rgba(201,168,76,0.38);animation:spin 12s linear infinite;}
+.ring-wrap::after{content:'';position:absolute;inset:-26px;border-radius:50%;border:1px dashed rgba(201,168,76,0.14);animation:spin 22s linear infinite reverse;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.dp-circle{width:148px;height:148px;border-radius:50%;border:3px solid var(--accent);background:var(--dark3);overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative;box-shadow:0 0 44px rgba(201,168,76,0.28);transition:box-shadow .3s,transform .3s;animation:floatDP 4s ease-in-out infinite;}
+.dp-circle:hover{box-shadow:0 0 65px rgba(201,168,76,0.5);transform:scale(1.04)!important;}
+@keyframes floatDP{0%,100%{transform:translateY(0);}50%{transform:translateY(-9px);}}
+.dp-circle img{width:100%;height:100%;object-fit:cover;}
+.dp-placeholder{display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--muted);}
+.dp-placeholder svg{opacity:.4;}
+.dp-placeholder span{font-size:11px;letter-spacing:.5px;}
+.dp-overlay{position:absolute;inset:0;border-radius:50%;background:rgba(0,0,0,0.65);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .3s;font-size:11px;letter-spacing:1px;color:var(--accent);font-weight:600;}
+.dp-circle:hover .dp-overlay{opacity:1;}
+.home-tag{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:10px;animation:fadeUp .6s .1s both;}
+.home-name{font-family:'Playfair Display',serif;font-size:clamp(46px,8vw,88px);font-weight:900;line-height:1.0;color:var(--light);margin-bottom:10px;animation:fadeUp .6s .2s both;}
+.home-name em{color:var(--accent);font-style:normal;}
+.home-role{font-size:15px;color:var(--muted);font-weight:300;margin-bottom:28px;animation:fadeUp .6s .3s both;}
+.cursor{display:inline-block;width:2px;height:1em;background:var(--accent);vertical-align:middle;animation:blink .8s step-end infinite;margin-left:2px;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+.objective-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 28px 20px 42px;font-size:14px;line-height:1.85;color:#c0b89a;position:relative;max-width:620px;text-align:left;animation:fadeUp .6s .4s both;}
+.objective-box::before{content:'"';font-family:'Playfair Display',serif;font-size:72px;color:var(--accent);opacity:.18;position:absolute;top:-8px;left:12px;line-height:1;}
+.scroll-cue{margin-top:34px;display:flex;flex-direction:column;align-items:center;gap:7px;color:var(--muted);font-size:10px;letter-spacing:2px;text-transform:uppercase;animation:fadeUp .6s .6s both;}
+.scroll-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:bounce 1.6s ease-in-out infinite;}
+@keyframes bounce{0%,100%{transform:translateY(0);opacity:1;}50%{transform:translateY(9px);opacity:.3;}}
+.sec-title{font-family:'Playfair Display',serif;font-size:42px;font-weight:700;color:var(--light);margin-bottom:6px;}
+.sec-title span{color:var(--accent);}
+.sec-sub{font-size:12px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin-bottom:16px;}
+.sec-divider{width:56px;height:2px;background:var(--accent);margin-bottom:44px;border-radius:2px;}
+.content-wrap{max-width:1000px;margin:0 auto;}
+.edu-item{display:grid;grid-template-columns:150px 1fr;gap:28px;margin-bottom:36px;padding-bottom:36px;border-bottom:1px solid var(--border);position:relative;}
+.edu-item:last-child{border-bottom:none;}
+.edu-year{font-family:'Playfair Display',serif;font-size:26px;color:var(--accent);font-weight:700;}
+.edu-deg{font-size:17px;font-weight:600;color:var(--light);margin-bottom:4px;}
+.edu-inst{font-size:13px;color:var(--muted);margin-bottom:7px;}
+.edu-desc{font-size:13px;color:#a09880;line-height:1.75;}
+.del-btn{position:absolute;top:0;right:0;background:rgba(255,60,60,0.08);border:1px solid rgba(255,60,60,0.2);color:rgba(255,100,100,0.6);width:26px;height:26px;border-radius:6px;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.del-btn:hover{background:rgba(255,60,60,0.2);color:#ff6060;border-color:rgba(255,60,60,0.5);}
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:18px;margin-bottom:36px;}
+.skill-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;transition:border-color .3s,transform .3s;position:relative;}
+.skill-card:hover{border-color:var(--accent);transform:translateY(-4px);}
+.skill-name{font-size:13px;font-weight:600;margin-bottom:10px;color:var(--light);}
+.skill-bar-bg{background:var(--dark3);border-radius:4px;height:4px;overflow:hidden;}
+.skill-bar{height:4px;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:4px;transition:width 1.2s cubic-bezier(.4,0,.2,1);}
+.skill-pct{font-size:10px;color:var(--muted);margin-top:5px;}
+.cert-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:22px;margin-bottom:36px;}
+.cert-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px;transition:transform .35s,border-color .3s;position:relative;overflow:hidden;}
+.cert-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),transparent);opacity:0;transition:opacity .3s;}
+.cert-card:hover{transform:translateY(-5px);border-color:var(--accent);}
+.cert-card:hover::after{opacity:1;}
+.cert-badge{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:10px;background:rgba(201,168,76,.1);font-size:22px;margin-bottom:12px;}
+.cert-title{font-size:15px;font-weight:600;color:var(--light);margin-bottom:3px;}
+.cert-issuer{font-size:11px;color:var(--accent);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;}
+.cert-date{font-size:11px;color:var(--muted);margin-bottom:14px;}
+.cert-thumb{width:100%;height:130px;background:var(--dark3);border-radius:8px;border:1px dashed var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer;transition:border-color .3s;margin-bottom:12px;overflow:hidden;}
+.cert-thumb:hover{border-color:var(--accent);}
+.cert-thumb img{width:100%;height:100%;object-fit:cover;border-radius:7px;}
+.cert-thumb-hint{font-size:11px;color:var(--muted);}
+.cert-actions{display:flex;gap:8px;}
+.cbtn{flex:1;padding:9px 0;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;transition:all .25s;font-family:'DM Sans',sans-serif;}
+.cbtn-upload{background:transparent;color:var(--accent);border:1px solid var(--accent);}
+.cbtn-upload:hover{background:var(--accent);color:var(--dark);}
+.cbtn-view{background:var(--accent);color:var(--dark);border:1px solid var(--accent);display:none;}
+.cbtn-view.on{display:block;}
+.cbtn-view:hover{background:var(--accent2);}
+.proj-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:24px;margin-bottom:36px;}
+.proj-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;transition:transform .35s,border-color .3s;position:relative;}
+.proj-card:hover{transform:translateY(-5px);border-color:var(--accent);}
+.proj-num{font-family:'Playfair Display',serif;font-size:44px;color:rgba(201,168,76,.12);font-weight:900;line-height:1;margin-bottom:-6px;}
+.proj-title{font-size:17px;font-weight:600;color:var(--light);margin-bottom:7px;}
+.proj-desc{font-size:13px;color:#a09880;line-height:1.75;margin-bottom:14px;}
+.proj-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px;}
+.proj-tag{background:rgba(201,168,76,.08);color:var(--accent);border:1px solid rgba(201,168,76,.22);padding:3px 9px;border-radius:20px;font-size:10px;}
+.proj-link{color:var(--accent);text-decoration:none;font-size:12px;font-weight:600;letter-spacing:.5px;}
+.proj-link:hover{color:var(--accent2);}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;}
+.contact-col-title{font-family:'Playfair Display',serif;font-size:22px;color:var(--light);margin-bottom:22px;}
+.clink{display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 18px;text-decoration:none;color:var(--light);transition:border-color .3s,transform .25s,background .25s;margin-bottom:12px;}
+.clink:hover{border-color:var(--accent);transform:translateX(6px);background:#1f1f1f;}
+.clink-icon{width:42px;height:42px;border-radius:10px;background:rgba(201,168,76,.08);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .3s;}
+.clink:hover .clink-icon{background:rgba(201,168,76,.2);}
+.clink-icon svg{width:20px;height:20px;}
+.clink-label{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:2px;}
+.clink-val{font-size:13px;font-weight:500;color:var(--light);}
+.social-section-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin:24px 0 14px;}
+.social-row{display:flex;gap:12px;align-items:center;}
+.social-btn{width:52px;height:52px;border-radius:13px;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;text-decoration:none;transition:border-color .3s,transform .25s,background .25s;cursor:pointer;position:relative;}
+.social-btn:hover{border-color:var(--accent);transform:translateY(-5px);background:#212121;}
+.social-btn svg{width:22px;height:22px;}
+.social-btn .stip{position:absolute;bottom:-24px;left:50%;transform:translateX(-50%);font-size:9px;letter-spacing:1px;color:var(--muted);white-space:nowrap;opacity:0;transition:opacity .2s;}
+.social-btn:hover .stip{opacity:1;}
+.social-handles{margin-top:28px;display:flex;flex-direction:column;gap:7px;}
+.s-handle-row{font-size:12px;color:var(--muted);}
+.s-handle-row span{color:var(--light);}
+.fgrp{margin-bottom:16px;}
+.fgrp label{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:5px;}
+.fgrp input,.fgrp textarea{width:100%;background:var(--dark3);border:1px solid var(--border);border-radius:8px;padding:11px 15px;color:var(--light);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;resize:none;transition:border-color .3s;}
+.fgrp input:focus,.fgrp textarea:focus{border-color:var(--accent);}
+.submit-btn{background:var(--accent);color:var(--dark);border:none;padding:13px 30px;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .3s;}
+.submit-btn:hover{background:var(--accent2);}
+.add-btn{background:transparent;color:var(--accent);border:1px solid var(--accent);padding:10px 22px;border-radius:8px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:.5px;transition:background .3s,color .3s;}
+.add-btn:hover{background:var(--accent);color:var(--dark);}
+ 
+/* SAVE INDICATOR */
+.save-bar{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--dark2);border:1px solid var(--border);border-radius:30px;padding:8px 20px;display:flex;align-items:center;gap:10px;z-index:500;font-size:12px;color:var(--muted);}
+.save-dot{width:7px;height:7px;border-radius:50%;background:#4caf50;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+ 
+/* RESET button */
+.reset-btn{background:rgba(255,60,60,0.1);color:rgba(255,100,100,0.7);border:1px solid rgba(255,60,60,0.2);padding:6px 14px;border-radius:6px;font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;}
+.reset-btn:hover{background:rgba(255,60,60,0.25);color:#ff6060;}
+ 
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:999;align-items:center;justify-content:center;}
+.modal-overlay.open{display:flex;animation:fadeUp .3s ease;}
+.modal-box{background:var(--dark2);border:1px solid var(--border);border-radius:18px;max-width:820px;width:92%;max-height:90vh;overflow:auto;padding:30px;position:relative;}
+.modal-close{position:absolute;top:14px;right:16px;background:var(--dark3);border:1px solid var(--border);color:var(--muted);font-size:16px;width:32px;height:32px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:color .2s,border-color .2s;}
+.modal-close:hover{color:var(--light);border-color:var(--accent);}
+.modal-img-wrap{background:var(--dark3);border-radius:10px;padding:8px;margin-bottom:16px;}
+.modal-img-wrap img{width:100%;border-radius:7px;display:block;}
+.modal-cert-title{font-family:'Playfair Display',serif;font-size:20px;color:var(--light);margin-bottom:4px;}
+.modal-cert-issuer{font-size:12px;color:var(--accent);letter-spacing:1px;text-transform:uppercase;}
+.editable{cursor:text;border-bottom:1px dashed rgba(201,168,76,.25);transition:border-color .2s;}
+.editable:focus{outline:none;border-bottom-color:var(--accent);}
+.edit-hint{font-size:10px;color:rgba(201,168,76,.4);letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:5px;}
+.anim{opacity:0;transform:translateY(22px);transition:opacity .55s ease,transform .55s ease;}
+.anim.vis{opacity:1;transform:none;}
+#toast{position:fixed;bottom:70px;right:28px;background:var(--accent);color:var(--dark);padding:11px 22px;border-radius:10px;font-size:13px;font-weight:600;z-index:9999;opacity:0;transform:translateY(12px);transition:all .3s;pointer-events:none;}
+#toast.show{opacity:1;transform:translateY(0);}
+@media(max-width:760px){nav a{padding:14px 8px;font-size:10px;letter-spacing:1px;}.contact-grid{grid-template-columns:1fr;}.edu-item{grid-template-columns:1fr;gap:6px;}.home-name{font-size:clamp(36px,10vw,60px);}}
+</style>
+</head>
+<bod>
+<canvas id="particles"></canvas>
+ 
+<nav>
+  <a onclick="showSec('home')" class="active" data-s="home">Home</a>
+  <a onclick="showSec('education')" data-s="education">Education</a>
+  <a onclick="showSec('skills')" data-s="skills">Skills</a>
+  <a onclick="showSec('certifications')" data-s="certifications">Certifications</a>
+
+  <a onclick="showSec('resume')" data-s="resume">Resume</a>
+
+
+  <a onclick="showSec('projects')" data-s="projects">Projects</a>
+  <a onclick="showSec('contact')" data-s="contact">Contact</a>
+</nav>
+ 
+<!-- HOME -->
+<section id="home" class="active">
+  <div class="home-bg"></div>
+  <div class="home-inner">
+    <div class="ring-wrap" onclick="document.getElementById('dpInput').click()" title="Click to upload photo">
+      <div class="dp-circle" id="dpCircle">
+        <div class="dp-placeholder" id="dpPlaceholder">
+          <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span>Add Photo</span>
+        </div>
+        <img id="dpImg" src="" style="display:none"/>
+        <div class="dp-overlay">📷 Change</div>
+      </div>
+    </div>
+    <input type="file" id="dpInput" accept="image/*" style="display:none" onchange="loadDP(event)"/>
+    <div class="home-tag">Portfolio — 2024</div>
+    <h1 class="home-name">
+      <span class="editable" contenteditable="true" id="homeName" onblur="saveField('homeName')">Your Name</span><br/>
+      <em>Here.</em>
+    </h1>
+    <p class="home-role">
+      <span class="editable" contenteditable="true" id="homeRole" onblur="saveField('homeRole')">Software Developer &amp; Designer</span><span class="cursor"></span>
+    </p>
+    <div class="objective-box">
+      <span class="edit-hint">✎ Click text to edit — auto-saved</span>
+      <p class="editable" contenteditable="true" id="homeObj" onblur="saveField('homeObj')">I am a passionate and driven professional seeking opportunities to apply my technical skills and creative problem-solving abilities. My goal is to contribute meaningfully to innovative projects while continuing to grow as an engineer and collaborator in a dynamic team environment.</p>
+    </div>
+    <div class="scroll-cue">
+      <span>Explore</span>
+      <div class="scroll-dot"></div>
+    </div>
+  </div>
+</section>
+ 
+<!-- EDUCATION -->
+<section id="education">
+  <div class="content-wrap">
+    <h2 class="sec-title">Edu<span>cation</span></h2>
+    <p class="sec-sub">Academic Background</p>
+    <div class="sec-divider"></div>
+    <div id="eduList"></div>
+    <button class="add-btn" onclick="addEdu()">+ Add Education</button>
+  </div>
+</section>
+ 
+<!-- SKILLS -->
+<section id="skills">
+  <div class="content-wrap">
+    <h2 class="sec-title">My <span>Skills</span></h2>
+    <p class="sec-sub">Technical Proficiency</p>
+    <div class="sec-divider"></div>
+    <div class="skills-grid" id="skillsGrid"></div>
+    <button class="add-btn" onclick="addSkill()">+ Add Skill</button>
+  </div>
+</section>
+ 
+<!-- CERTIFICATIONS -->
+<section id="certifications">
+  <div class="content-wrap">
+    <h2 class="sec-title">Certifi<span>cations</span></h2>
+    <p class="sec-sub">Credentials &amp; Achievements</p>
+    <div class="sec-divider"></div>
+    <div class="cert-grid" id="certGrid"></div>
+    <button class="add-btn" onclick="addCert()">+ Add Certification</button>
+  </div>
+</section>
+ 
+
+
+
+<section id="resume">
+  <div class="content-wrap">
+    <h2 class="sec-title">My <span>Resume</span></h2>
+    <p class="sec-sub">Upload & View Resume</p>
+    <div class="sec-divider"></div>
+
+    <div class="cert-grid" id="resumeGrid"></div>
+
+    <button class="add-btn" onclick="addResume()">+ Add Resume</button>
+  </div>
+</section>
+
+
+
+
+
+
+ 
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="content-wrap">
+    <h2 class="sec-title">My <span>Projects</span></h2>
+    <p class="sec-sub">Work &amp; Creations</p>
+    <div class="sec-divider"></div>
+    <div class="proj-grid" id="projGrid"></div>
+    <button class="add-btn" onclick="addProject()">+ Add Project</button>
+  </div>
+</section>
+ 
+<!-- CONTACT -->
+<section id="contact">
+  <div class="content-wrap">
+    <h2 class="sec-title">Get in <span>Touch</span></h2>
+    <p class="sec-sub">Let's Connect</p>
+    <div class="sec-divider"></div>
+    <div class="contact-grid">
+      <div>
+        <p class="contact-col-title">Contact Details</p>
+        <a class="clink" id="phoneLink" href="tel:+91XXXXXXXXXX">
+          <div class="clink-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.45 2 2 0 0 1 3.59 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          </div>
+          <div>
+            <div class="clink-label">Mobile — tap to call</div>
+            <div class="clink-val editable" contenteditable="true" id="phoneVal" onblur="saveContact('phoneVal','phoneLink','tel')">+91 XXXXX XXXXX</div>
+          </div>
+        </a>
+        <a class="clink" id="mailLink" href="mailto:you@email.com">
+          <div class="clink-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <div>
+            <div class="clink-label">Email — tap to mail</div>
+            <div class="clink-val editable" contenteditable="true" id="mailVal" onblur="saveContact('mailVal','mailLink','mail')">you@email.com</div>
+          </div>
+        </a>
+        <p class="social-section-label">Social Profiles — click to open</p>
+        <div class="social-row">
+          <a class="social-btn" id="instaLink" href="#" target="_blank" title="Instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            <span class="stip">Instagram</span>
+          </a>
+          <a class="social-btn" id="linkedinLink" href="#" target="_blank" title="LinkedIn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+            <span class="stip">LinkedIn</span>
+          </a>
+          <a class="social-btn" id="githubLink" href="#" target="_blank" title="GitHub">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+            <span class="stip">GitHub</span>
+          </a>
+        </div>
+        <div class="social-handles">
+          <div class="s-handle-row">Instagram: <span class="editable" contenteditable="true" id="instaVal" onblur="saveContact('instaVal','instaLink','insta')">@your_instagram</span></div>
+          <div class="s-handle-row">LinkedIn: <span class="editable" contenteditable="true" id="linkedinVal" onblur="saveContact('linkedinVal','linkedinLink','linkedin')">linkedin.com/in/your_profile</span></div>
+          <div class="s-handle-row">GitHub: <span class="editable" contenteditable="true" id="githubVal" onblur="saveContact('githubVal','githubLink','github')">github.com/your_username</span></div>
+        </div>
+      </div>
+      <div>
+        <p class="contact-col-title">Send a Message</p>
+        <div class="fgrp"><label>Name</label><input type="text" placeholder="Your full name"/></div>
+        <div class="fgrp"><label>Email</label><input type="email" placeholder="your@email.com"/></div>
+        <div class="fgrp"><label>Subject</label><input type="text" placeholder="What's this about?"/></div>
+        <div class="fgrp"><label>Message</label><textarea rows="5" placeholder="Write your message..."></textarea></div>
+        <button class="submit-btn" onclick="showToast('Message sent successfully ✓')">Send Message →</button>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<!-- CERT VIEW MODAL -->
+<div class="modal-overlay" id="certModal" onclick="closeMod(event)">
+  <div class="modal-box">
+    <button class="modal-close" onclick="document.getElementById('certModal').classList.remove('open')">✕</button>
+    <div class="modal-img-wrap">
+      <img id="modalImg" src="" alt="Certificate"/>
+      <div id="modalNoImg" style="color:var(--muted);font-size:13px;text-align:center;padding:50px 0;display:none;">No certificate uploaded yet.</div>
+    </div>
+    <h3 class="modal-cert-title" id="modalTitle"></h3>
+    <p class="modal-cert-issuer" id="modalIssuer"></p>
+  </div>
+</div>
+ 
+<!-- SAVE BAR -->
+<div class="save-bar">
+  <div class="save-dot"></div>
+  <span>All changes auto-saved to your browser</span>
+  <button class="reset-btn" onclick="confirmReset()">🗑 Reset All</button>
+</div>
+ 
+<div id="toast"></div>
+ 
+
+ 
+<script>
+/* ══════════════════════════════════════
+   STORAGE KEYS
+══════════════════════════════════════ */
+const KEYS = {
+  dp: 'pf_dp',
+  homeName: 'pf_homeName',
+  homeRole: 'pf_homeRole',
+  homeObj: 'pf_homeObj',
+  edu: 'pf_edu',
+  skills: 'pf_skills',
+  certs: 'pf_certs',
+  projects: 'pf_projects',
+  contact: 'pf_contact',
+};
+ 
+/* ══════════════════════════════════════
+   DEFAULT DATA
+══════════════════════════════════════ */
+const DEFAULT_EDU = [
+  {year:'2020\n2024',deg:'Bachelor of Engineering',inst:'University / College Name, City',desc:'Branch: Computer Engineering | CGPA: 8.5 / 10\nRelevant Coursework: Data Structures, DBMS, Web Dev, OS, Networks'},
+  {year:'2018\n2020',deg:'HSC — 12th Standard',inst:'School / Junior College Name, City',desc:'Stream: Science (PCM + CS) | Percentage: 85%'},
+];
+const DEFAULT_SKILLS = [
+  {name:'HTML / CSS',pct:90},{name:'JavaScript',pct:80},
+  {name:'Python',pct:75},{name:'React.js',pct:70},
+  {name:'MySQL / SQL',pct:65},{name:'Java',pct:60},
+  {name:'Git & GitHub',pct:85},{name:'Node.js',pct:55},
+];
+const DEFAULT_CERTS = [
+  {title:'Full Stack Web Development',issuer:'Coursera / Meta',date:'Oct 2023',img:''},
+  {title:'Python for Data Science',issuer:'IBM / edX',date:'Jul 2023',img:''},
+  {title:'AWS Cloud Practitioner',issuer:'Amazon Web Services',date:'Mar 2024',img:''},
+];
+const DEFAULT_PROJECTS = [
+  {num:'01',title:'Personal Portfolio Website',desc:'Fully responsive digital portfolio with dark theme, animations, and tab navigation.',tags:['HTML','CSS','JS'],link:'#'},
+  {num:'02',title:'E-Commerce Web App',desc:'Full-stack shopping platform with cart, checkout, and user authentication.',tags:['React','Node.js','MongoDB'],link:'#'},
+  {num:'03',title:'Student Result Management',desc:'Java desktop app to manage student results with MySQL database integration.',tags:['Java','MySQL','Swing'],link:'#'},
+];
+const DEFAULT_CONTACT = {
+  phone:'+91 XXXXX XXXXX',mail:'you@email.com',
+  insta:'@your_instagram',linkedin:'linkedin.com/in/your_profile',github:'github.com/your_username'
+};
+ 
+/* ══════════════════════════════════════
+   LOAD / SAVE HELPERS
+══════════════════════════════════════ */
+function ls(key,def){try{const v=localStorage.getItem(key);return v?JSON.parse(v):def;}catch{return def;}}
+function ss(key,val){try{localStorage.setItem(key,JSON.stringify(val));}catch{showToast('⚠ Storage full! Try removing large images.');}}
+ 
+/* ══════════════════════════════════════
+   DATA (loaded from storage or defaults)
+══════════════════════════════════════ */
+let edu      = ls(KEYS.edu,      DEFAULT_EDU);
+let skills   = ls(KEYS.skills,   DEFAULT_SKILLS);
+let certs    = ls(KEYS.certs,    DEFAULT_CERTS);
+let projects = ls(KEYS.projects, DEFAULT_PROJECTS);
+let contact  = ls(KEYS.contact,  DEFAULT_CONTACT);
+ 
+/* ══════════════════════════════════════
+   PARTICLES
+══════════════════════════════════════ */
+(function(){
+  const c=document.getElementById('particles'),ctx=c.getContext('2d');
+  let W,H,pts=[];
+  const resize=()=>{W=c.width=window.innerWidth;H=c.height=window.innerHeight;};
+  resize();window.addEventListener('resize',resize);
+  const mk=()=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.1+.3,vx:(Math.random()-.5)*.22,vy:(Math.random()-.5)*.22,a:Math.random()*.6+.1});
+  for(let i=0;i<95;i++)pts.push(mk());
+  (function loop(){
+    ctx.clearRect(0,0,W,H);
+    pts.forEach(p=>{p.x=(p.x+p.vx+W)%W;p.y=(p.y+p.vy+H)%H;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`rgba(201,168,76,${p.a*.3})`;ctx.fill();});
+    for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<115){ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.strokeStyle=`rgba(201,168,76,${(1-d/115)*.065})`;ctx.lineWidth=.5;ctx.stroke();}}
+    requestAnimationFrame(loop);
+  })();
+})();
+ 
+/* ══════════════════════════════════════
+   NAV
+══════════════════════════════════════ */
+function showSec(id){
+  document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('nav a').forEach(a=>a.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelector(`[data-s="${id}"]`).classList.add('active');
+  window.scrollTo(0,0);
+  triggerAnims();
+  if(id==='skills')animBars();
+}
+function triggerAnims(){
+  setTimeout(()=>{document.querySelectorAll('.active .anim').forEach((el,i)=>setTimeout(()=>el.classList.add('vis'),i*90));},60);
+}
+ 
+/* ══════════════════════════════════════
+   HOME — LOAD SAVED
+══════════════════════════════════════ */
+function initHome(){
+  const n=ls(KEYS.homeName,'');if(n)document.getElementById('homeName').textContent=n;
+  const r=ls(KEYS.homeRole,'');if(r)document.getElementById('homeRole').textContent=r;
+  const o=ls(KEYS.homeObj,'');if(o)document.getElementById('homeObj').textContent=o;
+  const dp=ls(KEYS.dp,'');
+  if(dp){document.getElementById('dpPlaceholder').style.display='none';document.getElementById('dpImg').src=dp;document.getElementById('dpImg').style.display='block';}
+  loadContactUI();
+}
+function saveField(id){
+  ss(KEYS[id],document.getElementById(id).textContent.trim());
+  showToast('Saved ✓');
+}
+ 
+/* ══════════════════════════════════════
+   PROFILE PHOTO
+══════════════════════════════════════ */
+function loadDP(e){
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    document.getElementById('dpPlaceholder').style.display='none';
+    const img=document.getElementById('dpImg');img.src=ev.target.result;img.style.display='block';
+    ss(KEYS.dp,ev.target.result);
+    showToast('Photo saved ✓');
+  };
+  r.readAsDataURL(f);
+}
+ 
+/* ══════════════════════════════════════
+   EDUCATION
+══════════════════════════════════════ */
+function renderEdu(){
+  const list=document.getElementById('eduList');list.innerHTML='';
+  edu.forEach((e,i)=>{
+    const d=document.createElement('div');d.className='edu-item anim';
+    d.innerHTML=`
+      <button class="del-btn" onclick="delEdu(${i})" title="Delete">✕</button>
+      <div><div class="edu-year editable" contenteditable="true" onblur="saveEduField(${i},'year',this)">${e.year.replace('\n','<br/>')}</div></div>
+      <div>
+        <div class="edu-deg editable" contenteditable="true" onblur="saveEduField(${i},'deg',this)">${e.deg}</div>
+        <div class="edu-inst editable" contenteditable="true" onblur="saveEduField(${i},'inst',this)">${e.inst}</div>
+        <div class="edu-desc editable" contenteditable="true" onblur="saveEduField(${i},'desc',this)">${e.desc}</div>
+      </div>`;
+    list.appendChild(d);
+  });
+}
+function saveEduField(i,field,el){
+  edu[i][field]=el.innerText.trim();
+  ss(KEYS.edu,edu);showToast('Saved ✓');
+}
+function delEdu(i){if(!confirm('Delete this education entry?'))return;edu.splice(i,1);ss(KEYS.edu,edu);renderEdu();setTimeout(triggerAnims,60);}
+function addEdu(){
+  edu.push({year:'Year',deg:'Degree / Certificate',inst:'Institution Name',desc:'Details, GPA, notes'});
+  ss(KEYS.edu,edu);renderEdu();setTimeout(triggerAnims,60);
+}
+ 
+/* ══════════════════════════════════════
+   SKILLS
+══════════════════════════════════════ */
+function renderSkills(){
+  const g=document.getElementById('skillsGrid');g.innerHTML='';
+  skills.forEach((s,i)=>{
+    g.innerHTML+=`<div class="skill-card anim" style="position:relative;">
+      <button class="del-btn" onclick="delSkill(${i})" title="Delete" style="top:8px;right:8px;">✕</button>
+      <div class="skill-name editable" contenteditable="true" onblur="saveSkillField(${i},'name',this)">${s.name}</div>
+      <div class="skill-bar-bg"><div class="skill-bar" id="sb${i}" style="width:0%"></div></div>
+      <div class="skill-pct" id="spct${i}">${s.pct}%</div>
+    </div>`;
+  });
+}
+function saveSkillField(i,field,el){skills[i][field]=el.innerText.trim();ss(KEYS.skills,skills);showToast('Saved ✓');}
+function delSkill(i){if(!confirm('Delete this skill?'))return;skills.splice(i,1);ss(KEYS.skills,skills);renderSkills();setTimeout(()=>{triggerAnims();animBars();},60);}
+function animBars(){setTimeout(()=>skills.forEach((_,i)=>{const b=document.getElementById('sb'+i);if(b)b.style.width=skills[i].pct+'%';}),280);}
+function addSkill(){
+  const n=prompt('Skill name:');if(!n)return;
+  const p=parseInt(prompt('Proficiency % (0-100):')||'70');
+  skills.push({name:n,pct:p});ss(KEYS.skills,skills);
+  renderSkills();setTimeout(()=>{triggerAnims();animBars();},60);
+}
+ 
+/* ══════════════════════════════════════
+   CERTIFICATIONS
+══════════════════════════════════════ */
+function renderCerts(){
+  const g=document.getElementById('certGrid');g.innerHTML='';
+  certs.forEach((c,i)=>{
+    g.innerHTML+=`
+    <div class="cert-card anim" style="position:relative;">
+      <button class="del-btn" onclick="delCert(${i})" title="Delete">✕</button>
+      <div class="cert-badge">🏅</div>
+      <div class="cert-title editable" contenteditable="true" onblur="saveCertField(${i},'title',this)">${c.title}</div>
+      <div class="cert-issuer editable" contenteditable="true" onblur="saveCertField(${i},'issuer',this)">${c.issuer}</div>
+      <div class="cert-date editable" contenteditable="true" onblur="saveCertField(${i},'date',this)">${c.date}</div>
+      <div class="cert-thumb" id="cthumb${i}" onclick="document.getElementById('cinp${i}').click()">
+        ${c.img?`<img src="${c.img}"/>`:`<span class="cert-thumb-hint">📎 Click to upload certificate image</span>`}
+      </div>
+      <input type="file" id="cinp${i}" accept="image/*" style="display:none" onchange="upCert(event,${i})"/>
+      <div class="cert-actions">
+        <button class="cbtn cbtn-upload" onclick="document.getElementById('cinp${i}').click()">📤 Upload Image</button>
+        <button class="cbtn cbtn-view ${c.img?'on':''}" id="cvb${i}" onclick="viewCert(${i})">👁 View</button>
+      </div>
+    </div>`;
+  });
+}
+function saveCertField(i,field,el){certs[i][field]=el.innerText.trim();ss(KEYS.certs,certs);showToast('Saved ✓');}
+function delCert(i){if(!confirm('Delete this certification?'))return;certs.splice(i,1);ss(KEYS.certs,certs);renderCerts();setTimeout(triggerAnims,60);}
+function upCert(e,idx){
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    certs[idx].img=ev.target.result;
+    ss(KEYS.certs,certs);
+    document.getElementById('cthumb'+idx).innerHTML=`<img src="${ev.target.result}"/>`;
+    document.getElementById('cvb'+idx).classList.add('on');
+    showToast('Certificate image saved ✓');
+  };
+  r.readAsDataURL(f);
+}
+function viewCert(idx){
+  const c=certs[idx];
+  document.getElementById('modalTitle').textContent=c.title;
+  document.getElementById('modalIssuer').textContent=c.issuer;
+  if(c.img){document.getElementById('modalImg').src=c.img;document.getElementById('modalImg').style.display='block';document.getElementById('modalNoImg').style.display='none';}
+  else{document.getElementById('modalImg').style.display='none';document.getElementById('modalNoImg').style.display='block';}
+  document.getElementById('certModal').classList.add('open');
+}
+function closeMod(e){if(e.target===document.getElementById('certModal'))document.getElementById('certModal').classList.remove('open');}
+function addCert(){
+  const t=prompt('Certification title:');if(!t)return;
+  const iss=prompt('Issuer:')||'Issuer';
+  const dt=prompt('Date (e.g. Jan 2024):')||'2024';
+  certs.push({title:t,issuer:iss,date:dt,img:''});
+  ss(KEYS.certs,certs);renderCerts();setTimeout(triggerAnims,60);
+}
+ 
+
+
+/* ══════════════════════════════════════
+   RESUME
+══════════════════════════════════════ */
+let resumes = ls('pf_resumes', []);
+
+function renderResume(){
+  const g=document.getElementById('resumeGrid');
+  g.innerHTML='';
+
+  resumes.forEach((r,i)=>{
+    g.innerHTML+=`
+    <div class="cert-card anim" style="position:relative;">
+      <button class="del-btn" onclick="delResume(${i})">✕</button>
+
+      <div class="cert-badge">📄</div>
+
+      <div class="cert-title editable" contenteditable="true"
+        onblur="saveResumeField(${i},'title',this)">
+        ${r.title}
+      </div>
+
+      <div class="cert-date editable" contenteditable="true"
+        onblur="saveResumeField(${i},'date',this)">
+        ${r.date}
+      </div>
+
+      <div class="cert-thumb" onclick="document.getElementById('rinp${i}').click()">
+        ${r.img?`<img src="${r.img}"/>`:`<span class="cert-thumb-hint">📎 Upload Resume Image</span>`}
+      </div>
+
+      <input type="file" id="rinp${i}" accept="image/*" style="display:none"
+        onchange="upResume(event,${i})"/>
+
+      <div class="cert-actions">
+        <button class="cbtn cbtn-upload"
+          onclick="document.getElementById('rinp${i}').click()">📤 Upload</button>
+
+        <button class="cbtn cbtn-view ${r.img?'on':''}"
+          onclick="viewResume(${i})">👁 View</button>
+      </div>
+    </div>`;
+  });
+}
+
+function saveResumeField(i,field,el){
+  resumes[i][field]=el.innerText.trim();
+  ss('pf_resumes',resumes);
+  showToast('Saved ✓');
+}
+
+function addResume(){
+  resumes.push({
+    title:'My Resume',
+    date:'2024',
+    img:''
+  });
+  ss('pf_resumes',resumes);
+  renderResume();
+  setTimeout(triggerAnims,60);
+}
+
+function delResume(i){
+  if(!confirm('Delete this resume?'))return;
+  resumes.splice(i,1);
+  ss('pf_resumes',resumes);
+  renderResume();
+}
+
+function upResume(e,i){
+  const f=e.target.files[0];
+  if(!f)return;
+
+  const r=new FileReader();
+  r.onload=ev=>{
+    resumes[i].img=ev.target.result;
+    ss('pf_resumes',resumes);
+    renderResume();
+    showToast('Resume uploaded ✓');
+  };
+  r.readAsDataURL(f);
+}
+
+function viewResume(i){
+  const r=resumes[i];
+
+  document.getElementById('modalTitle').textContent=r.title;
+  document.getElementById('modalIssuer').textContent='Resume';
+
+  if(r.img){
+    document.getElementById('modalImg').src=r.img;
+    document.getElementById('modalImg').style.display='block';
+    document.getElementById('modalNoImg').style.display='none';
+  } else {
+    document.getElementById('modalImg').style.display='none';
+    document.getElementById('modalNoImg').style.display='block';
+  }
+
+  document.getElementById('certModal').classList.add('open');
+}
+
+
+
+
+
+
+
+
+/* ══════════════════════════════════════
+   PROJECTS
+══════════════════════════════════════ */
+function renderProjects(){
+  const g=document.getElementById('projGrid');g.innerHTML='';
+  projects.forEach((p,i)=>{
+    g.innerHTML+=`<div class="proj-card anim">
+      <button class="del-btn" onclick="delProject(${i})" title="Delete">✕</button>
+      <div class="proj-num">${p.num}</div>
+      <div class="proj-title editable" contenteditable="true" onblur="saveProjField(${i},'title',this)">${p.title}</div>
+      <div class="proj-desc editable" contenteditable="true" onblur="saveProjField(${i},'desc',this)">${p.desc}</div>
+      <div class="proj-tags">${p.tags.map(t=>`<span class="proj-tag">${t}</span>`).join('')}</div>
+      <a class="proj-link editable" contenteditable="true" onblur="saveProjField(${i},'link',this)" href="${p.link}" target="_blank">View Project →</a>
+    </div>`;
+  });
+}
+function saveProjField(i,field,el){projects[i][field]=el.innerText.trim();ss(KEYS.projects,projects);showToast('Saved ✓');}
+function delProject(i){if(!confirm('Delete this project?'))return;projects.splice(i,1);ss(KEYS.projects,projects);renderProjects();setTimeout(triggerAnims,60);}
+function addProject(){
+  const t=prompt('Project title:');if(!t)return;
+  const d=prompt('Short description:')||'';
+  const tags=(prompt('Tags (comma separated):')||'').split(',').map(s=>s.trim()).filter(Boolean);
+  const link=prompt('Project URL (or # for none):')||'#';
+  projects.push({num:String(projects.length+1).padStart(2,'0'),title:t,desc:d,tags,link});
+  ss(KEYS.projects,projects);renderProjects();setTimeout(triggerAnims,60);
+}
+ 
+/* ══════════════════════════════════════
+   CONTACT
+══════════════════════════════════════ */
+function loadContactUI(){
+  document.getElementById('phoneVal').textContent=contact.phone;
+  document.getElementById('mailVal').textContent=contact.mail;
+  document.getElementById('instaVal').textContent=contact.insta;
+  document.getElementById('linkedinVal').textContent=contact.linkedin;
+  document.getElementById('githubVal').textContent=contact.github;
+  applyContactLink('phoneLink',contact.phone,'tel');
+  applyContactLink('mailLink',contact.mail,'mail');
+  applyContactLink('instaLink',contact.insta,'insta');
+  applyContactLink('linkedinLink',contact.linkedin,'linkedin');
+  applyContactLink('githubLink',contact.github,'github');
+}
+
+function applyContactLink(linkId,val,type){
+  const el = document.getElementById(linkId);
+
+  if(type === 'tel'){
+    el.href = 'tel:' + val.replace(/\s/g,'');
+  }
+  else if(type === 'mail'){
+    el.href = 'mailto:' + val;
+  }
+  else if(type === 'insta'){
+    const username = val.replace('@','').trim();
+    el.href = 'https://www.instagram.com/' + username;
+  }
+  else if(type === 'linkedin'){
+    const username = val.trim();
+    el.href = 'https://www.linkedin.com/in/' + username;
+  }
+  else if(type === 'github'){
+    el.href = val.startsWith('http') ? val : 'https://' + val;
+  }
+}
+
+
+
+ 
+/* ══════════════════════════════════════
+   RESET ALL
+══════════════════════════════════════ */
+function confirmReset(){
+  if(!confirm('⚠ This will delete ALL your saved data and reset to defaults. Are you sure?'))return;
+  Object.values(KEYS).forEach(k=>localStorage.removeItem(k));
+  showToast('Reset done — reloading...');
+  setTimeout(()=>location.reload(),1200);
+}
+ 
+/* ══════════════════════════════════════
+   TOAST
+══════════════════════════════════════ */
+function showToast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+ 
+/* ══════════════════════════════════════
+   INIT
+══════════════════════════════════════ */
+initHome();
+renderEdu();
+renderSkills();
+renderCerts();
+renderProjects();
+triggerAnims();
+</script>
+</body>
+</html>
